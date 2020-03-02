@@ -1,0 +1,19 @@
+{
+  "name": "gnaw",
+  "version": "1.0.0",
+  "description": "A tool to help developers with their github.io sites",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "tsc && node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nhawdge/gnaw.js.git"
+  },
+  "author": "John Pavek",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Nhawdge/gnaw.js/issues"
+  },
+  "homepage": "https://github.com/Nhawdge/gnaw.js#readme"
+}
