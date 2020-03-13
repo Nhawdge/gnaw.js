@@ -16,5 +16,8 @@
     "url": "https://github.com/Nhawdge/gnaw.js/issues"
   },
   "bin": "./dist/index.js",
-  "homepage": "https://github.com/Nhawdge/gnaw.js#readme"
+  "homepage": "https://github.com/Nhawdge/gnaw.js#readme",
+  "dependencies": {
+    "@types/node": "^13.9.1"
+  }
 }
