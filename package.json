@@ -1,6 +1,6 @@
 {
   "name": "gnaw",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A tool to help developers with their github.io sites",
   "main": "./dist/index.js",
   "scripts": {

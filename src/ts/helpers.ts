@@ -3,23 +3,26 @@ const fs = require('fs');
 const readline = require('readline');
 
 export class Helpers {
-    static ensureComponentsDir() {
+    static EnsureComponentsDir() {
         var dir = "./components";
-        Helpers.ensureDir(dir);
+        Helpers.EnsureDir(dir);
     }
 
-    static ensureDocsDir() {
-        var dir = './docs';
-        Helpers.ensureDir(dir);
-    }
-
-    static ensureDir(dir: string) {
+    static EnsureDir(dir: string) {
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir);
         }
     }
-    static createEmptyFile(file: string) {
+    static CreateEmptyFile(file: string) {
         fs.closeSync(fs.openSync(file, 'w'));
+    }
+
+    static PromptForArg(promptText: string) {
+        return promptText
+    }
+
+    static FileExists(file: string): boolean {
+        return fs.existsSync(file)
     }
 
 }
