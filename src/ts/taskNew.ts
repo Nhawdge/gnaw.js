@@ -1,8 +1,7 @@
 import { Helpers } from "./helpers";
-import { projectConfig } from './index';
+import { projectConfig, ConfigFile, rl } from './index';
 
 const fs = require('fs');
-const readline = require('readline');
 
 export class TaskNew {
     static NewProject() {
@@ -10,50 +9,74 @@ export class TaskNew {
         if (!Helpers.FileExists(projectConfig.configFile)) {
             Helpers.CreateEmptyFile(projectConfig.configFile);
             fs.writeFileSync(projectConfig.configFile, JSON.stringify(TaskNew.EmptyConfig))
-
-            
         }
         let projConfig = fs.readFileSync(projectConfig.configFile);
         console.log("Has File")
         let projJson = JSON.parse(projConfig) as ConfigFile;
 
-        var components = projJson.components
+        var components = projJson.components;
         if (components) {
             console.warn("No components Defined -- type `gnaw new component [name]`")
         }
         Helpers.EnsureDir(projJson.outdir)
     }
 
-    NewComponent(name?: string) {
-        Helpers.EnsureComponentsDir();
+    static Component(name: string) {
 
-        if (name) {
-            Helpers.CreateEmptyFile("./components/" + name + ".html");
-            updatePackageJson(name);
+        var config = Helpers.GetProjectConfig();
 
-        }
-        else {
-            const rl = readline.createInterface({
-                input: process.stdin,
-                output: process.stdout
-            });
+        var filePath = `${config.parentDir}templates`
+        Helpers.EnsureDir(filePath);
 
-            rl.question('New component name? ', (name: string) => {
-                Helpers.CreateEmptyFile("./components/" + name + ".html");
-                updatePackageJson(name);
+        filePath += "/" + name + ".html";
 
-
-                rl.close();
-            });
-        }
-        function updatePackageJson(name: string) {
-            let packageJsonFile = fs.readFileSync('package.json');
-            let packageJson = JSON.parse(packageJsonFile);
-            packageJson.gnaw.components.push(name);
-            fs.writeFileSync("./package.json", JSON.stringify(packageJson));
-        }
+        console.log(filePath);
+        config.components.push(name);
+        Helpers.SaveProjectConfig(config);
+        Helpers.CreateEmptyFile(filePath);
 
     }
+
+    static Template(name: string) {
+        var config = Helpers.GetProjectConfig();
+
+        var filePath = `${config.parentDir}templates`;
+        Helpers.EnsureDir(filePath);
+        filePath += "/" + name + ".html";
+
+        console.log(filePath);
+        config.templates.push(name);
+        Helpers.SaveProjectConfig(config);
+        Helpers.CreateEmptyFile(filePath);
+    }
+
+    static Page(name: string, template?: string) {
+        var config = Helpers.GetProjectConfig();
+
+        if (!template) {
+            rl.question(`Templates Available: \n ${config.templates}\nNew Page from Template?\n`,
+                (templateName: string) => {
+                    TaskNew.Page(name, templateName);
+                });
+        }
+        else {
+            Helpers.EnsureDir(`${config.parentDir}templates/`);
+
+            var FromfilePath = `${config.parentDir}templates/${template}.html`;
+            var ToFilePath = `${config.parentDir}/${name}.html`;
+
+            config.pages.push(name);
+            Helpers.SaveProjectConfig(config);
+
+            if (template) {
+                fs.copyFileSync(FromfilePath, ToFilePath);
+            }
+            else {
+                Helpers.CreateEmptyFile(ToFilePath);
+            }
+        }
+    }
+    
     static EmptyConfig = {
         pages: [],
         templates: [],
@@ -61,13 +84,4 @@ export class TaskNew {
         parentDir: "./src/",
         outdir: "./"
     }
-}
-
-interface ConfigFile {
-    pages: Array<string>,
-    templates: Array<string>,
-    components: Array<string>,
-    parentDir: string,
-
-    outdir: string
 }

@@ -3,8 +3,8 @@ import { Helpers } from "./helpers";
 const fs = require('fs');
 const readline = require('readline');
 
-export class Build {
-    static buildSite() {
+export class TaskBuild {
+    static BuildSite() {
         let packageJsonFile = fs.readFileSync('package.json');
         let packageJson = JSON.parse(packageJsonFile);
 
@@ -20,7 +20,7 @@ export class Build {
             console.warn("No components Defined -- type `gnaw new component [name]`")
         }
 
-        Helpers.EnsureDocsDir();
+        // Helpers.EnsureDir();
 
         var rd = readline.createInterface({
             input: fs.createReadStream(packageJson.main),
